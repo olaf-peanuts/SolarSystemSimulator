@@ -1,0 +1,28 @@
+/* App.module.css */
+
+/* --- 全体コンテナ --- */
+.app-container {
+  width: 100%;
+  height: 100vh;
+  position: relative;
+  overflow: hidden;
+}
+
+/* --- コントロールパネル（ラジオボタン群） --- */
+.app-container__controls {
+  position: absolute;
+  top: 10px;
+  left: 10px;
+  background: rgba(255, 255, 255, 0.9);
+  padding: 12px;
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+  z-index: 10;
+}
+
+/* --- 3Dキャンバスエリア --- */
+.app-container__canvas {
+  width: 100%;
+  height: 100%;
+  background-color: #808080; /* 背景黒にするなら */
+}

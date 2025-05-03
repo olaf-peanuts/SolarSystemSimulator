@@ -1,0 +1,42 @@
+/* src/components/controls/TimeScaleControl.module.css */
+
+.time-scale-control {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.time-scale-control__label {
+    font-size: 0.9rem;
+    font-weight: 600;
+    color: var(--color-text);
+}
+
+.time-scale-control__options {
+    display: flex;
+    gap: 8px;
+}
+
+.time-scale-control__option {
+    padding: 6px 12px;
+    border-radius: 6px;
+    background-color: #eee;
+    color: #333;
+    font-size: 0.85rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.time-scale-control__option:hover {
+    background-color: #ddd;
+}
+
+.time-scale-control__option--selected {
+    background-color: #646cff;
+    color: #fff;
+}
+
+.time-scale-control__input {
+    display: none;
+}

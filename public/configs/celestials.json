@@ -1,0 +1,29 @@
+{
+  "type": "Star",
+  "name": "Sun",
+  "radius": 696340,
+  "color": "#ffff00",
+  "textureUrl": "/textures/sun.jpg",
+  "children": [
+    {
+      "type": "Planet",
+      "name": "Earth",
+      "radius": 6371,
+      "color": "#00aaff",
+      "orbitRadius": 149600000,
+      "textureUrl": "/textures/earth.jpg",
+      "orbitSpeed": 1,
+      "rotationSpeed": 0.1,
+      "children": [
+        {
+          "type": "Moon",
+          "name": "Moon",
+          "radius": 1737,
+          "color": "#cccccc",
+          "orbitRadius": 384400,
+          "textureUrl": "/textures/moon.jpg"
+        }
+      ]
+    }
+  ]
+}
