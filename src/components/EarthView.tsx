@@ -2,8 +2,8 @@
 import React, { useRef, useEffect } from 'react';
 import { useFrame, useThree } from '@react-three/fiber';
 import * as THREE from 'three';
-import { useTimeStore } from '../utils/TimeManager';
-import { calculateCelestialPosition, calculateMoonPhase } from '../utils/OrbitCalculator';
+import { useTimeStore } from '../utils/timeManager';
+import { calculateCelestialPosition, calculateMoonPhase } from '../utils/orbitCalculator';
 import { CelestialConfig } from '../types/celestialBody';
 
 interface EarthViewProps {

@@ -1,20 +1,24 @@
 // src/App.tsx
-import React, { useEffect, useState, Suspense } from 'react';
+import { useEffect, useState, Suspense } from 'react';
 import { Canvas } from '@react-three/fiber';
-import { OrbitControls, Stars } from '@react-three/drei';
+import { OrbitControls, Stars, Line } from '@react-three/drei';
 import * as THREE from 'three';
-import { CelestialBody } from './components/CelestialBody';
+//import { CelestialBody } from './components/CelestialBody';
 import { EarthView } from './components/EarthView';
-import { CelestialConfig, CelestialBody as CelestialBodyType } from './types/celestialBody';
-import { useTimeStore, formatDateTime } from './utils/TimeManager';
-import { generateOrbitPoints, calculateMoonPhase } from './utils/OrbitCalculator';
+import { CelestialConfig } from './types/celestialBody';
+import { useTimeStore, formatDateTime } from './utils/timeManager';
+import { generateOrbitPoints, calculateMoonPhase } from './utils/orbitCalculator';
 import './App.css';
 
 // 設定ファイルのインポート
-import celestialConfig from './config/celestial.json';
+import celestialConfig from './configs/celestials.json';
 
 function App() {
-  const [config, setConfig] = useState<CelestialConfig>(celestialConfig as CelestialConfig);
+  const [config] = useState<CelestialConfig>(celestialConfig as CelestialConfig);
+  // または
+  // ESLintルールを無視する場合
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  //const [config, setConfig] = useState<CelestialConfig>(celestialConfig as CelestialConfig);
   const [viewMode, setViewMode] = useState<'system' | 'earth' | 'custom'>('system');
   const [fov, setFov] = useState<number>(60);
   const [latitude, setLatitude] = useState<number>(35.6895); // デフォルト: 東京
@@ -113,9 +117,16 @@ function App() {
         const points = generateOrbitPoints(body.orbitalElements, 100);
         
         orbits.push(
+          // 元のバッファ属性を使っている部分を以下のように置き換え
+          <Line
+            points={points.map(p => [p.x, p.y, p.z])}
+            color="white" // または任意の色
+            lineWidth={1}
+          />
+          /*
           <line key={`orbit-${body.id}`}>
             <bufferGeometry>
-              <bufferAttribute
+              <THREE.BufferAttribute
                 attach="attributes-position"
                 count={points.length}
                 array={new Float32Array(points.flatMap(p => [p.x, p.y, p.z]))}
@@ -124,6 +135,7 @@ function App() {
             </bufferGeometry>
             <lineBasicMaterial color={body.color} opacity={0.5} transparent />
           </line>
+          */
         );
       }
     }

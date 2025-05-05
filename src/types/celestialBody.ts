@@ -1,5 +1,5 @@
 // src/types/celestialBody.ts
-import { OrbitalElements } from '../utils/OrbitCalculator';
+import { OrbitalElements } from '../utils/orbitCalculator';
 
 export type CelestialBodyType = 'star' | 'planet' | 'moon' | 'dwarf' | 'asteroid' | 'comet';
 

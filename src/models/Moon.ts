@@ -1,4 +1,4 @@
-import { Celestial } from './Celestial';
+import { Celestial } from './celestial';
 import { CelestialConfig } from '@/types/CelestialConfig';
 
 // 衛星（惑星の周りを公転）

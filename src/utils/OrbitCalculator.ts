@@ -1,6 +1,6 @@
 // src/utils/OrbitCalculator.ts
 import * as THREE from 'three';
-import { CelestialBodyType } from '../types/celestialBody';
+//import { CelestialBodyType } from '../types/celestialBody';
 
 // ケプラーの法則に基づいた軌道計算
 export interface OrbitalElements {
@@ -70,8 +70,8 @@ export function calculateCelestialPosition(
   const distance = orbitalElements.semiMajorAxis * (1 - orbitalElements.eccentricity * Math.cos(eccentricAnomaly));
   
   // 軌道面座標系での位置（x-y平面）
-  const xOrbit = distance * Math.cos(trueAnomalyRad);
-  const yOrbit = distance * Math.sin(trueAnomalyRad);
+  //const xOrbit = distance * Math.cos(trueAnomalyRad);
+  //const yOrbit = distance * Math.sin(trueAnomalyRad);
   
   // 軌道面から黄道面への変換
   // 3D回転行列を使用して正確に計算する必要がありますが、簡略化のため基本実装を示します
