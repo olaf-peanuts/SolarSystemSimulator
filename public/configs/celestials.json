@@ -1,29 +1,70 @@
 {
-  "type": "Star",
-  "name": "Sun",
-  "radius": 696340,
-  "color": "#ffff00",
-  "textureUrl": "/textures/sun.jpg",
-  "children": [
+  "version": "1.0.0",
+  "bodies": [
     {
-      "type": "Planet",
-      "name": "Earth",
+      "id": "sun",
+      "name": "太陽",
+      "type": "star",
+      "radius": 696340,
+      "displayRadius": 2.5,
+      "color": "#ffff00",
+      "texture": "/textures/sun.jpg",
+      "rotationPeriod": 609.6,
+      "luminosity": 1.0,
+      "temperature": 5778,
+      "spectralType": "G2V"
+    },
+    {
+      "id": "earth",
+      "name": "地球",
+      "type": "planet",
       "radius": 6371,
-      "color": "#00aaff",
-      "orbitRadius": 149600000,
-      "textureUrl": "/textures/earth.jpg",
-      "orbitSpeed": 1,
-      "rotationSpeed": 0.1,
-      "children": [
-        {
-          "type": "Moon",
-          "name": "Moon",
-          "radius": 1737,
-          "color": "#cccccc",
-          "orbitRadius": 384400,
-          "textureUrl": "/textures/moon.jpg"
-        }
-      ]
+      "displayRadius": 1.0,
+      "color": "#1e90ff",
+      "texture": "/textures/earth.jpg",
+      "rotationPeriod": 23.93,
+      "parentId": "sun",
+      "axialTilt": 23.44,
+      "atmosphere": true,
+      "orbitalElements": {
+        "semiMajorAxis": 1.00000011,
+        "eccentricity": 0.01671022,
+        "inclination": 0.00005,
+        "longitudeOfAscendingNode": -11.26064,
+        "argumentOfPerihelion": 102.94719,
+        "meanAnomaly": 100.46435,
+        "epoch": "2000-01-01T12:00:00Z"
+      }
+    },
+    {
+      "id": "moon",
+      "name": "月",
+      "type": "moon",
+      "radius": 1737.4,
+      "displayRadius": 0.27,
+      "color": "#cccccc",
+      "texture": "/textures/moon.jpg",
+      "rotationPeriod": 655.73,
+      "parentId": "earth",
+      "axialTilt": 1.54,
+      "synchronousRotation": true,
+      "orbitalElements": {
+        "semiMajorAxis": 0.00257,
+        "eccentricity": 0.0549,
+        "inclination": 5.145,
+        "longitudeOfAscendingNode": 125.08,
+        "argumentOfPerihelion": 318.0634,
+        "meanAnomaly": 115.3654,
+        "epoch": "2000-01-01T12:00:00Z"
+      }
     }
-  ]
+  ],
+  "defaultView": {
+    "cameraPosition": [0, 10, 30],
+    "target": "earth"
+  },
+  "timeSettings": {
+    "defaultTimeScale": 1000,
+    "startDate": "2023-01-01T00:00:00Z"
+  }
 }

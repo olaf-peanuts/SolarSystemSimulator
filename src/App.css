@@ -1,42 +1,139 @@
-#root {
-  max-width: 1280px;
-  margin: 0 auto;
-  padding: 2rem;
-  text-align: center;
+/* src/App.css */
+.App {
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+  color: #fff;
+  background-color: #000;
+  font-family: Arial, sans-serif;
 }
 
-.logo {
-  height: 6em;
-  padding: 1.5em;
-  will-change: filter;
-  transition: filter 300ms;
-}
-.logo:hover {
-  filter: drop-shadow(0 0 2em #646cffaa);
-}
-.logo.react:hover {
-  filter: drop-shadow(0 0 2em #61dafbaa);
+.controls {
+  padding: 1rem;
+  background-color: rgba(0, 0, 0, 0.8);
+  border-bottom: 1px solid #333;
+  z-index: 100;
 }
 
-@keyframes logo-spin {
-  from {
-    transform: rotate(0deg);
+.time-display {
+  margin-bottom: 0.5rem;
+}
+
+.time-controls {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  margin-bottom: 1rem;
+}
+
+.time-controls button {
+  padding: 0.5rem 1rem;
+  background-color: #1a1a1a;
+  color: #fff;
+  border: 1px solid #444;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+.time-controls button:hover {
+  background-color: #333;
+}
+
+.time-controls label {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.time-controls input[type="range"] {
+  width: 200px;
+}
+
+.view-controls {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  flex-wrap: wrap;
+}
+
+.view-controls button {
+  padding: 0.5rem 1rem;
+  background-color: #1a1a1a;
+  color: #fff;
+  border: 1px solid #444;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+.view-controls button:hover {
+  background-color: #333;
+}
+
+.view-controls label {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.earth-coordinates {
+  display: flex;
+  gap: 1rem;
+}
+
+.earth-coordinates label {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.earth-coordinates input[type="number"] {
+  width: 60px;
+  padding: 0.3rem;
+  background-color: #1a1a1a;
+  color: #fff;
+  border: 1px solid #444;
+  border-radius: 4px;
+}
+
+.scene-container {
+  flex: 1;
+  position: relative;
+}
+
+.info-panel {
+  padding: 1rem;
+  background-color: rgba(0, 0, 0, 0.8);
+  border-top: 1px solid #333;
+}
+
+.moon-phase-info {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.moon-phase-display {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.moon-image {
+  box-shadow: 0 0 10px rgba(255, 255, 255, 0.3);
+}
+
+/* レスポンシブ対応 */
+@media (max-width: 768px) {
+
+  .time-controls,
+  .view-controls {
+    flex-direction: column;
+    align-items: flex-start;
   }
-  to {
-    transform: rotate(360deg);
+
+  .earth-coordinates {
+    flex-direction: column;
   }
-}
-
-@media (prefers-reduced-motion: no-preference) {
-  a:nth-of-type(2) .logo {
-    animation: logo-spin infinite 20s linear;
-  }
-}
-
-.card {
-  padding: 2em;
-}
-
-.read-the-docs {
-  color: #888;
 }
