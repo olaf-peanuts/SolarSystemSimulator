@@ -1,7 +1,8 @@
+// src/components/CelestialBody.tsx
 import * as THREE from 'three';
 import React, { useRef } from 'react';
 //import { useFrame } from '@react-three/fiber';
-import { CelestialBody } from './types/celestialBody';
+import { CelestialBody } from '../types/celestialBody';
 
 interface CelestialBodyProps {
   body: CelestialBody;
