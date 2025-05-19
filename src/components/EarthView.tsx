@@ -1,10 +1,10 @@
 // src/components/EarthView.tsx
-import React, { useRef, useEffect } from 'react';
-import { useFrame, useThree } from '@react-three/fiber';
+import { useRef, useEffect } from 'react';
+import { useThree, useFrame } from '@react-three/fiber';
 import * as THREE from 'three';
-import { useTimeStore } from '../utils/timeManager';
-import { calculateCelestialPosition, calculateMoonPhase } from '../utils/orbitCalculator';
 import { CelestialConfig } from '../types/celestialBody';
+import { useTimeStore } from '../utils/timeManager';
+import { calculateCelestialPosition } from '../utils/orbitCalculator';
 
 interface EarthViewProps {
   config: CelestialConfig;
@@ -13,89 +13,84 @@ interface EarthViewProps {
   fov: number;
 }
 
-export const EarthView: React.FC<EarthViewProps> = ({
-  config,
-  latitude,
-  longitude,
-  fov,
-}) => {
+export function EarthView({ config, latitude, longitude, fov }: EarthViewProps) {
+  // Three.jsのカメラを取得
   const { camera } = useThree();
-  const currentTime = useTimeStore((state) => state.currentTime);
-  
-  // 地球、月、太陽のオブジェクトを取得
-  const earth = config.bodies.find(body => body.id === 'earth');
-  const moon = config.bodies.find(body => body.id === 'moon');
-  const sun = config.bodies.find(body => body.id === 'sun');
-  
+  // 地球の参照
+  const earthRef = useRef<THREE.Group | null>(null);
+  const { currentTime } = useTimeStore();
+
+  // 地球の位置を計算
   useEffect(() => {
-    // カメラの視野角を設定
-    if (camera instanceof THREE.PerspectiveCamera) {
-      camera.fov = fov;
-      camera.updateProjectionMatrix();
-      
-      // 魚眼効果の適用（視野角が広い場合）
-      if (fov > 100) {
-        // Fisheyeシェーダーなどを適用する場合はここで
-      }
+    // 地球の情報を取得
+    const earth = config.bodies.find(b => b.id === 'earth');
+    const sun = config.bodies.find(b => b.id === 'sun');
+
+    if (!earth || !sun || earth.type !== 'planet') return;
+
+    // 地球の位置を計算（太陽を中心とした位置）
+    const earthPosition = calculateCelestialPosition(
+      earth.orbitalElements,
+      currentTime,
+      new THREE.Vector3(0, 0, 0)
+    );
+
+    // 地球の参照を設定
+    if (earthRef.current) {
+      earthRef.current.position.copy(earthPosition);
     }
-  }, [camera, fov]);
-  
-  // 緯度経度から地球上の位置を計算
-  const getEarthSurfacePosition = () => {
-    if (!earth) return new THREE.Vector3(0, 0, 0);
+
+    // カメラを地球の表面に配置
+    const earthRadius = earth.displayRadius;
     
-    // 緯度経度をラジアンに変換
+    // 緯度と経度をラジアンに変換
     const latRad = latitude * Math.PI / 180;
     const lonRad = longitude * Math.PI / 180;
     
-    // 地球の半径
-    const radius = earth.displayRadius;
+    // 地球表面の座標を計算（球面座標から直交座標へ）
+    const surfaceX = earthRadius * Math.cos(latRad) * Math.cos(lonRad);
+    const surfaceY = earthRadius * Math.sin(latRad);
+    const surfaceZ = earthRadius * Math.cos(latRad) * Math.sin(lonRad);
     
-    // 球面座標から直交座標に変換
-    const x = radius * Math.cos(latRad) * Math.cos(lonRad);
-    const y = radius * Math.sin(latRad);
-    const z = radius * Math.cos(latRad) * Math.sin(lonRad);
+    // 地球の中心からの表面位置
+    const surfacePosition = new THREE.Vector3(surfaceX, surfaceY, surfaceZ);
     
-    return new THREE.Vector3(x, y, z);
-  };
-  
-  // フレームごとに実行
-  useFrame(() => {
-    if (!earth || !moon || !sun) return;
+    // カメラの位置を地球の表面に設定
+    camera.position.copy(earthPosition.clone().add(surfacePosition));
     
-    // 各天体の位置を計算
-    const sunPosition = new THREE.Vector3(0, 0, 0); // 太陽は常に原点
-    const earthPosition = calculateCelestialPosition(earth.orbitalElements, currentTime);
-    const moonPosition = calculateCelestialPosition(moon.orbitalElements, currentTime, earthPosition);
-    
-    // 地球上の視点位置
-    const surfacePosition = getEarthSurfacePosition();
-    
-    // 地球の自転を考慮して位置を調整
-    // 自転角度 = 現在の時刻に基づく角度
-    const earthRotationAngle = (currentTime.getHours() + currentTime.getMinutes() / 60) * (Math.PI / 12);
-    const rotationMatrix = new THREE.Matrix4().makeRotationY(-earthRotationAngle);
-    surfacePosition.applyMatrix4(rotationMatrix);
-    
-    // カメラを地球上の視点に配置
-    camera.position.copy(earthPosition).add(surfacePosition);
-    
-    // カメラの向きを設定（初期値として北向き）
-    const up = new THREE.Vector3(0, 1, 0); // 北を上に
-    
-    // 月の方向と太陽の方向を計算
-    const toMoon = new THREE.Vector3().subVectors(moonPosition, camera.position).normalize();
-    const toSun = new THREE.Vector3().subVectors(sunPosition, camera.position).normalize();
-    
-    // カメラの向きを設定（どの方向を見るかはアプリの要件による）
-    // ここでは仮に太陽の方向を向けるようにする
-    camera.lookAt(new THREE.Vector3().addVectors(camera.position, toSun));
+    // カメラの上方向を設定（北極方向）
+    const up = new THREE.Vector3(0, 1, 0);
     camera.up.copy(up);
     
-    // 月のフェーズを計算
-    const moonPhase = calculateMoonPhase(moonPosition, earthPosition, sunPosition);
-    // moonPhaseの値（0-1）に基づいて月の満ち欠け表示を更新
+    // カメラの視線方向を空に向ける（表面の法線方向）
+    const target = earthPosition.clone().add(surfacePosition.clone().multiplyScalar(2));
+    camera.lookAt(target);
+    
+    // FOVを更新
+    camera.fov = fov;
+    camera.updateProjectionMatrix();
+  }, [camera, config, latitude, longitude, fov, currentTime]);
+
+  // 自転を反映（実際の時間に基づいて）
+  useFrame(() => {
+    const earth = config.bodies.find(b => b.id === 'earth');
+    if (!earth || !earthRef.current) return;
+    
+    // 現在時刻から地球の自転角度を計算
+    const rotationPeriod = earth.rotationPeriod; // 時間単位
+    const dayInMs = rotationPeriod * 3600 * 1000; // ミリ秒に変換
+    const dayProgress = (currentTime.getTime() % dayInMs) / dayInMs;
+    
+    // 地球の自転角度（360度 * 日の進行度）
+    const rotation = 2 * Math.PI * dayProgress;
+    
+    // 経度オフセットを考慮した回転（経度の増加は西向き）
+    const longitudeOffset = (longitude * Math.PI) / 180;
+    
+    earthRef.current.rotation.y = rotation - longitudeOffset;
   });
-  
-  return null; // このコンポーネントは視点の制御のみを行うため、表示要素はない
-};
+
+  return (
+    <group ref={earthRef} />
+  );
+}

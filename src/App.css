@@ -1,139 +1,40 @@
-/* src/App.css */
-.App {
+/* filepath: src/App.css */
+
+/**
+ * アプリ全体のBEM形式CSS
+ * - .app: ルート要素
+ * - .app__header: ヘッダー
+ * - .app__scene-container: 3Dシーン表示部
+ * - .app__info-panel: フッター（月齢情報など）
+ */
+
+.app {
+  min-height: 100vh;
+  background: #101010;
+  color: #fff;
+  font-family: 'Segoe UI', 'Meiryo', sans-serif;
   display: flex;
   flex-direction: column;
-  height: 100vh;
-  color: #fff;
-  background-color: #000;
-  font-family: Arial, sans-serif;
 }
 
-.controls {
-  padding: 1rem;
-  background-color: rgba(0, 0, 0, 0.8);
-  border-bottom: 1px solid #333;
-  z-index: 100;
+.app__header {
+  padding: 1rem 0;
+  background: #181818;
+  border-bottom: 1px solid #222;
 }
 
-.time-display {
-  margin-bottom: 0.5rem;
-}
-
-.time-controls {
+.app__scene-container {
+  flex: 1 1 auto;
   display: flex;
-  align-items: center;
-  gap: 1rem;
-  margin-bottom: 1rem;
+  justify-content: center;
+  align-items: stretch;
+  background: #000;
+  padding: 1rem 0;
 }
 
-.time-controls button {
-  padding: 0.5rem 1rem;
-  background-color: #1a1a1a;
-  color: #fff;
-  border: 1px solid #444;
-  border-radius: 4px;
-  cursor: pointer;
-  transition: background-color 0.2s;
-}
-
-.time-controls button:hover {
-  background-color: #333;
-}
-
-.time-controls label {
-  display: flex;
-  align-items: center;
-  gap: 0.5rem;
-}
-
-.time-controls input[type="range"] {
-  width: 200px;
-}
-
-.view-controls {
-  display: flex;
-  align-items: center;
-  gap: 1rem;
-  flex-wrap: wrap;
-}
-
-.view-controls button {
-  padding: 0.5rem 1rem;
-  background-color: #1a1a1a;
-  color: #fff;
-  border: 1px solid #444;
-  border-radius: 4px;
-  cursor: pointer;
-  transition: background-color 0.2s;
-}
-
-.view-controls button:hover {
-  background-color: #333;
-}
-
-.view-controls label {
-  display: flex;
-  align-items: center;
-  gap: 0.5rem;
-}
-
-.earth-coordinates {
-  display: flex;
-  gap: 1rem;
-}
-
-.earth-coordinates label {
-  display: flex;
-  align-items: center;
-  gap: 0.5rem;
-}
-
-.earth-coordinates input[type="number"] {
-  width: 60px;
-  padding: 0.3rem;
-  background-color: #1a1a1a;
-  color: #fff;
-  border: 1px solid #444;
-  border-radius: 4px;
-}
-
-.scene-container {
-  flex: 1;
-  position: relative;
-}
-
-.info-panel {
-  padding: 1rem;
-  background-color: rgba(0, 0, 0, 0.8);
-  border-top: 1px solid #333;
-}
-
-.moon-phase-info {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-}
-
-.moon-phase-display {
-  display: flex;
-  align-items: center;
-  gap: 1rem;
-}
-
-.moon-image {
-  box-shadow: 0 0 10px rgba(255, 255, 255, 0.3);
-}
-
-/* レスポンシブ対応 */
-@media (max-width: 768px) {
-
-  .time-controls,
-  .view-controls {
-    flex-direction: column;
-    align-items: flex-start;
-  }
-
-  .earth-coordinates {
-    flex-direction: column;
-  }
+.app__info-panel {
+  background: #181818;
+  border-top: 1px solid #222;
+  padding: 1rem 0;
+  text-align: center;
 }

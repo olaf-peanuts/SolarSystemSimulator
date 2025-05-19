@@ -1,0 +1,24 @@
+/* filepath: src/components/SceneCanvas.module.css */
+
+/**
+ * 3Dシーン表示コンポーネント用BEM形式CSS
+ * - .scene-canvas: ルート要素
+ * - .scene-canvas__canvas: Canvasラッパー
+ */
+
+.scene-canvas {
+    width: 100%;
+    height: 100%;
+    background: #000;
+    position: relative;
+    border-radius: 8px;
+    overflow: hidden;
+}
+
+.scene-canvas__canvas {
+    width: 100%;
+    height: 600px;
+    display: block;
+    border-radius: 8px;
+    background: #000;
+}

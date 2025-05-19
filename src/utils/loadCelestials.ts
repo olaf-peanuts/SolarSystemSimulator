@@ -1,46 +1,98 @@
-import { CelestialConfig } from '@/types/CelestialConfig';
-import { Celestial } from '@/models/Celestial';
-import { Star } from '@/models/Star';
-import { Planet } from '@/models/Planet';
-import { Moon } from '@/models/Moon';
+import { Star as StarType, Planet as PlanetType, Moon as MoonType } from '../types/celestialBody';
+import { CelestialBody as CelestialBodyClass } from '../models/celestialBody';
+import { Star } from '../models/star';
+import { Planet } from '../models/planet';
+import { Moon } from '../models/moon';
+import { OrbitalElements } from '../utils/orbitCalculator';
 
 /**
- * JSONファイルから天体構成を読み込み、CelestialのMapを構築する
+ * celestials.json から天体データを読み込み、型安全に各天体クラスへ変換してMapとして返す
+ * - orbitalElements.epoch（軌道要素）はDate型へ変換
+ * - Star, Planet, Moonクラスのインスタンスを生成
+ * @returns 天体IDをキー、CelestialBodyインスタンスを値とするMap
  */
-export async function loadCelestials(): Promise<Map<string, Celestial>> {
+export async function loadCelestials(): Promise<Map<string, CelestialBodyClass>> {
+  // JSONファイルを取得
   const response = await fetch('/configs/celestials.json');
-  const rootConfig: CelestialConfig = await response.json();
+  const json = await response.json();
 
-  const celestialMap = new Map<string, Celestial>();
+  // 天体IDをキー、CelestialBodyインスタンスを値とするMap
+  const celestialMap = new Map<string, CelestialBodyClass>();
 
-  function build(config: CelestialConfig, parent?: Celestial): Celestial {
-    let instance: Celestial;
-
-    switch (config.type) {
-      case 'Star':
-        instance = new Star(config, parent);
-        break;
-      case 'Planet':
-        instance = new Planet(config, parent);
-        break;
-      case 'Moon':
-        instance = new Moon(config, parent);
-        break;
-      default:
-        throw new Error(`Unknown celestial type: ${config.type}`);
-    }
-
-    celestialMap.set(config.name, instance);
-
-    config.children?.forEach(childConfig => {
-      const child = build(childConfig, instance);
-      instance.children.push(child); // 親のchildrenに登録
-    });
-
-    return instance;
+  /**
+   * orbitalElements.epoch を Date 型に変換し、OrbitalElements型として返す
+   */
+  function parseOrbitalElements(oeRaw: unknown): OrbitalElements {
+    const oe = oeRaw as Record<string, unknown>;
+    return {
+      semiMajorAxis: oe.semiMajorAxis as number,
+      eccentricity: oe.eccentricity as number,
+      inclination: oe.inclination as number,
+      longitudeOfAscendingNode: oe.longitudeOfAscendingNode as number,
+      argumentOfPerihelion: oe.argumentOfPerihelion as number,
+      meanAnomaly: oe.meanAnomaly as number,
+      epoch: typeof oe.epoch === 'string' ? new Date(oe.epoch) : (oe.epoch as Date),
+    };
   }
 
-  build(rootConfig); // 最上位から構築
+  // bodies配列をループし、各天体を型安全にインスタンス化
+  for (const bodyRaw of json.bodies as Array<Record<string, unknown>>) {
+    const type = bodyRaw.type as string;
+    let instance: CelestialBodyClass;
+    if (type === 'star') {
+      const body: StarType = {
+        id: bodyRaw.id as string,
+        name: bodyRaw.name as string,
+        type: 'star',
+        radius: bodyRaw.radius as number,
+        displayRadius: bodyRaw.displayRadius as number,
+        color: bodyRaw.color as string,
+        texture: bodyRaw.texture as string | undefined,
+        rotationPeriod: bodyRaw.rotationPeriod as number,
+        parentId: bodyRaw.parentId as string | undefined,
+        luminosity: bodyRaw.luminosity as number,
+        temperature: bodyRaw.temperature as number,
+        spectralType: bodyRaw.spectralType as string,
+      };
+      instance = new Star(body);
+    } else if (type === 'planet') {
+      const body: PlanetType = {
+        id: bodyRaw.id as string,
+        name: bodyRaw.name as string,
+        type: 'planet',
+        radius: bodyRaw.radius as number,
+        displayRadius: bodyRaw.displayRadius as number,
+        color: bodyRaw.color as string,
+        texture: bodyRaw.texture as string | undefined,
+        rotationPeriod: bodyRaw.rotationPeriod as number,
+        parentId: bodyRaw.parentId as string | undefined,
+        orbitalElements: parseOrbitalElements(bodyRaw.orbitalElements),
+        atmosphere: bodyRaw.atmosphere as boolean | undefined,
+        rings: bodyRaw.rings as boolean | undefined,
+        axialTilt: bodyRaw.axialTilt as number,
+      };
+      instance = new Planet(body);
+    } else if (type === 'moon') {
+      const body: MoonType = {
+        id: bodyRaw.id as string,
+        name: bodyRaw.name as string,
+        type: 'moon',
+        radius: bodyRaw.radius as number,
+        displayRadius: bodyRaw.displayRadius as number,
+        color: bodyRaw.color as string,
+        texture: bodyRaw.texture as string | undefined,
+        rotationPeriod: bodyRaw.rotationPeriod as number,
+        parentId: bodyRaw.parentId as string | undefined,
+        orbitalElements: parseOrbitalElements(bodyRaw.orbitalElements),
+        axialTilt: bodyRaw.axialTilt as number,
+        synchronousRotation: bodyRaw.synchronousRotation as boolean,
+      };
+      instance = new Moon(body);
+    } else {
+      throw new Error(`Unknown celestial type: ${type}`);
+    }
+    celestialMap.set(bodyRaw.id as string, instance);
+  }
 
   return celestialMap;
 }

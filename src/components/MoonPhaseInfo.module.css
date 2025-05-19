@@ -1,0 +1,57 @@
+/* filepath: src/components/MoonPhaseInfo.module.css */
+
+/**
+ * 月齢情報表示コンポーネント用BEM形式CSS
+ * - .moon-phase-info: ルート要素
+ * - .moon-phase-info__title: タイトル
+ * - .moon-phase-info__display: 月相画像と説明のラッパー
+ * - .moon-phase-info__image: 月相画像の円形表示
+ * - .moon-phase-info__desc: 説明テキスト
+ */
+
+ .moon-phase-info {
+     padding: 1rem;
+     background: #181818;
+     color: #fff;
+     border-radius: 8px;
+     max-width: 320px;
+     margin: 0 auto;
+     box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+ }
+
+ .moon-phase-info__title {
+     font-size: 1.2rem;
+     font-weight: bold;
+     margin-bottom: 0.5rem;
+     text-align: center;
+ }
+
+ .moon-phase-info__display {
+     display: flex;
+     align-items: center;
+     gap: 1rem;
+     justify-content: center;
+ }
+
+ .moon-phase-info__image {
+     background-color: #333;
+     width: 100px;
+     height: 100px;
+     border-radius: 50%;
+     position: relative;
+     overflow: hidden;
+     box-shadow: 0 0 8px #222;
+     flex-shrink: 0;
+ }
+
+ .moon-phase-info__desc {
+     display: flex;
+     flex-direction: column;
+     gap: 0.3rem;
+     font-size: 0.95rem;
+ }
+
+ .moon-phase-info__desc p {
+     margin: 0;
+     line-height: 1.4;
+ }
