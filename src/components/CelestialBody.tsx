@@ -39,11 +39,12 @@ export function CelestialBody({ body, parentPosition = new THREE.Vector3(0,0,0),
    */
   const material = useMemo(() => {
     const isStar = body.type === 'star';
+    const hasTexture = Boolean(body.texture);
     return new THREE.MeshStandardMaterial({
-      map: body.texture ? texture : undefined,
-      color: body.color ?? '#ffffff', // Ensure color is never undefined
-      emissive: isStar ? body.color ?? '#000000' : '#000000', // Ensure emissive is never undefined
-      emissiveIntensity: isStar ? 0.5 : 0,
+      map: hasTexture ? texture : undefined,
+      color: hasTexture ? '#ffffff' : (body.color ?? '#ffffff'), // テクスチャがあれば白で固定
+      emissive: isStar ? '#ffffff' : '#000000',
+      emissiveIntensity: isStar ? 1.0 : 0,
     });
   }, [body, texture]);
 

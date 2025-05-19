@@ -2,7 +2,7 @@
 
 import React, { Suspense } from 'react';
 import { Canvas } from '@react-three/fiber';
-import { OrbitControls, Stars } from '@react-three/drei';
+import { OrbitControls } from '@react-three/drei';
 import styles from './SceneCanvas.module.css';
 import { CelestialBody } from './CelestialBody';
 import { CelestialBody as CelestialBodyClass } from '../models/celestialBody';
@@ -31,7 +31,9 @@ const SceneCanvas: React.FC<SceneCanvasProps> = ({
       <Canvas className={styles['scene-canvas__canvas']} camera={{ position: [0, 0, 50], fov }}>
         <color attach="background" args={['#000']} />
         <ambientLight intensity={0.1} />
+        {/* ダミーの星の描画 
         <Stars radius={100} depth={50} count={5000} factor={4} saturation={0} fade />
+        */}
         {/* 軌道や天体の描画 */}
         <Suspense fallback={null}>
           {bodies.map((body, idx) => (
