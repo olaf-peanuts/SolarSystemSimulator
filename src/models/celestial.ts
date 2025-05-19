@@ -1,4 +1,4 @@
-import { CelestialConfig } from '@/types/CelestialConfig';
+import { CelestialConfig } from '../types/celestialConfig';
 
 // Celestial = 天体（恒星・惑星・衛星）を抽象化した基底クラス
 export class Celestial {

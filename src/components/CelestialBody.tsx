@@ -12,6 +12,9 @@ interface CelestialBodyProps {
   body: CelestialBodyClass;
   parentPosition?: THREE.Vector3;
   currentTime: Date;
+  viewMode: 'system' | 'earth' | 'custom';
+  latitude: number;
+  longitude: number; // Added longitude property
 }
 
 /**
